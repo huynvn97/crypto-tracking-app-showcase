@@ -26,7 +26,9 @@ struct CoinRow: View {
     
     var body: some View {
         HStack {
-            Circle().frame(width: 30, height: 30)
+           
+            CoinImageView().frame(width: 30, height: 30)
+           
             Text(coin.symbol).fontWeight(.bold).font(.headline)
             Spacer()
             

@@ -60,6 +60,28 @@ class NetworkManager {
         
     }
     
+    static func downloadFile(urlString: String) throws -> AnyPublisher<Data, Error>  {
+        guard let url = URL(string: urlString) else {
+            throw URLError(URLError.Code.badURL)
+        }
+        
+        
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .subscribe(on: DispatchQueue.global(qos: .default))
+            .tryMap {
+                (output) -> Data in
+                guard let response = output.response as? HTTPURLResponse,
+                      response.statusCode >= 200 && response.statusCode < 300 else {
+                    // handle error
+                    print("error")
+                    throw URLError(URLError.Code.badServerResponse)
+                }
+                return output.data
+            }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
     static func handleCompletionResponse(completion: Subscribers.Completion<Error>) {
         switch completion {
         case .finished:

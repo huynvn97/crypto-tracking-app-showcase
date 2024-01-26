@@ -46,7 +46,6 @@ class CoinDataService {
             try NetworkManager.get(url: "cryptocurrency/listings/latest")
                 .decode(type: GetCoinResponse.self, decoder: JSONDecoder())
                 .sink(receiveCompletion: NetworkManager.handleCompletionResponse, receiveValue: { [weak self] (returnedCoins) in
-                    print(returnedCoins.data)
                     self?.allCoins = returnedCoins.data
                     self?.coinCancellable?.cancel()
                 })
